@@ -1,5 +1,5 @@
 '''
-A church has 3 drummers, 2 bass players, 8 vocalists, and 4 guitarists. 
+A church has 3 drummers, 2 bass players, 8 vocalists, and 4 guitarists
 Give each some random weeks they're out of town, and then try and create a three month schedule with 1 drummer, 1 bass, 1 guitar, and 2 vocalists each week.
 What happens if someone has multiple roles?
 '''
@@ -24,9 +24,19 @@ class Scheduler():
         return self.schedule_band()
 
     def generate_weeks_off(self):
+        '''
+        generate_weeks_off is creating a random number between 1 - weeks_needed and it does that 1 - 4 times
+        aka giving someone 1 - 4 weeks off
+        '''
         return sample(range(1, self.weeks_needed + 1), randint(1, 4))
 
     def check_available_people(self,band: dict, week: int, role: str):
+        '''
+        check_available_people looks through a dictionary and find the people who
+        A. have the week off
+        B. match the needed role
+        after searching for the available people it returns a list with the names of people who are available to schedule that given week
+        '''
         available_people = []
 
         for person in band['muscicians']:
@@ -36,6 +46,10 @@ class Scheduler():
         return available_people
 
     def pick_person(self,band: dict, week: int, role: str, choose_amount: int | None = 1):
+        '''
+        pick_person will randomly pick a name or names from the list of names returned by check_available_people
+        '''
+
         available_people = self.check_available_people(band=band, week=week, role=role)
 
         if choose_amount >= 2:
@@ -43,6 +57,12 @@ class Scheduler():
         return choice(available_people)
 
     def generate_band(self):
+        '''
+        generate_band is used to generate the band that is getting scheduled and return a dictionary with a list of dictionaries with a persons name, role, and weeks off
+        and if there are extra roles it will assign people multiple roles
+        in the end it will return a dictionary with the key muscicians and the value being a list of dictionaries
+        '''
+
         band = {
             'muscicians': []
         }
@@ -78,6 +98,10 @@ class Scheduler():
         return band
     
     def schedule_band(self):
+        '''
+        schedule_band assignes the memebers of the band to a specific week and returns a string with the week and band memebers playing aswell as there role
+        '''
+
         finished_schedule = ''
 
         band = deepcopy(self.band)
