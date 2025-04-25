@@ -37,7 +37,7 @@ class Scheduler():
         schedule_band is used to schedule the band by assigning people to diffrent roles and returning a string with the week and the muisicians
         that will be playing in that week
         '''
-        finished_schedule = ''
+        finished_schedule = []
 
         band = deepcopy(self.band)
 
@@ -48,12 +48,12 @@ class Scheduler():
                 vocalists = self.pick_people(band=band, week=week, needed_role='vocalist', choose_amount=2)
                 guitarist = self.pick_people(band=band, week=week, needed_role='guitarist')
                 
-                finished_schedule += f'Week: {week} \nDrummer: {''.join(drummer)} \nBassist: {''.join(bass_player)} \nVocalists: {', '.join(vocalists)} \nGuitarist: {''.join(guitarist)}\n\n'
+                finished_schedule.append(f'Week: {week} \nDrummer: {''.join(drummer)} \nBassist: {''.join(bass_player)} \nVocalists: {', '.join(vocalists)} \nGuitarist: {''.join(guitarist)}\n\n')
                 band = deepcopy(self.band)
             except ValueError:
-                finished_schedule += f'Week: {week} Doesnt not have enough people to perform\n\n'
+                finished_schedule.append(f'Week: {week} Doesnt not have enough people to perform\n\n')
 
-        return finished_schedule
+        return ''.join(finished_schedule)
     
 schedule = Scheduler(weeks_needed=12, band=generate_band(weeks_needed=12, people_in_band=12, drummers=3, bass_players=2, vocalists=8, guitarists=4))
 
