@@ -30,7 +30,9 @@ class Scheduler():
         for person in assigned_people:
             band['muscicians'].remove(person)
 
-        return sample([person['name'] for person in assigned_people], choose_amount)
+        list_of_people = [person['name'] for person in assigned_people]
+
+        return sample(list_of_people, choose_amount)
     
     def schedule_band(self):
         '''
@@ -53,8 +55,10 @@ class Scheduler():
             except ValueError:
                 finished_schedule.append(f'Week: {week} Doesnt not have enough people to perform\n\n')
 
-        return ''.join(finished_schedule)
-    
-schedule = Scheduler(weeks_needed=12, band=generate_band(weeks_needed=12, people_in_band=12, drummers=3, bass_players=2, vocalists=8, guitarists=4))
+        return finished_schedule
 
-print(schedule.schedule_band())
+
+if __name__ == '__main__':
+    schedule = Scheduler(weeks_needed=12, band=generate_band(weeks_needed=12, people_in_band=12, drummers=3, bass_players=2, vocalists=8, guitarists=4))
+    
+    print(''.join(schedule.schedule_band()))
