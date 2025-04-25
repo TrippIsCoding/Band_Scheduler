@@ -4,122 +4,57 @@ Give each some random weeks they're out of town, and then try and create a three
 What happens if someone has multiple roles?
 '''
 
-from random import choice, randint, sample
-from faker import Faker
-from  copy import deepcopy
-
-name_gen = Faker()
+from random import sample
+from copy import deepcopy
+from utils import generate_band
 
 class Scheduler():
-    def __init__(self, weeks_needed, people_in_band, drummers, bass_players, vocalists, guitarists):
+    def __init__(self, band, weeks_needed):
         self.weeks_needed = weeks_needed
-        self.people_in_band = people_in_band
-        self.drummers = drummers
-        self.bass_players = bass_players
-        self.vocalists = vocalists
-        self.guitarists = guitarists
-        self.band = self.generate_band()
-    
-    def __str__(self):
-        return self.schedule_band()
+        self.band = band
 
-    def generate_weeks_off(self):
+    def pick_people(self, band: dict, week: int, needed_role: str, choose_amount: int | None = 1):
         '''
-        generate_weeks_off is creating a random number between 1 - weeks_needed and it does that 1 - 4 times
-        aka giving someone 1 - 4 weeks off
+        pick_people is picking a person from the band that has the needed_role and they need to be available that week.
+        In the end of the function it returns the name or names of people who are chosen from the available_people list
         '''
-        return sample(range(1, self.weeks_needed + 1), randint(1, 4))
 
-    def check_available_people(self,band: dict, week: int, role: str):
-        '''
-        check_available_people looks through a dictionary and find the people who
-        A. have the week off
-        B. match the needed role
-        after searching for the available people it returns a list with the names of people who are available to schedule that given week
-        '''
         available_people = []
 
         for person in band['muscicians']:
-            if not week in person['weeks_off'] and role in person['roles']:
-                available_people.append(person['name'])
-                band['muscicians'].remove(person)
-        return available_people
-
-    def pick_person(self,band: dict, week: int, role: str, choose_amount: int | None = 1):
-        '''
-        pick_person will randomly pick a name or names from the list of names returned by check_available_people
-        '''
-
-        available_people = self.check_available_people(band=band, week=week, role=role)
-
-        if choose_amount >= 2:
-            return sample(available_people, k=choose_amount)
-        return choice(available_people)
-
-    def generate_band(self):
-        '''
-        generate_band is used to generate the band that is getting scheduled and return a dictionary with a list of dictionaries with a persons name, role, and weeks off
-        and if there are extra roles it will assign people multiple roles
-        in the end it will return a dictionary with the key muscicians and the value being a list of dictionaries
-        '''
-
-        band = {
-            'muscicians': []
-        }
+            if not week in person['weeks_off'] and needed_role in person['roles']:
+                available_people.append(person)
+        
+        assigned_people = list(sample(available_people, k=choose_amount))
     
-        amount_of_roles = {
-            'drummer': self.drummers,
-            'bass_player': self.bass_players,
-            'vocalist': self.vocalists,
-            'guitarist': self.guitarists
-        }
-    
-        roles = [x for x, y in amount_of_roles.items() for _ in range(y)]
+        for person in assigned_people:
+            band['muscicians'].remove(person)
 
-        for _ in range(self.people_in_band + 1):
-            role = choice(roles)
-            person = {'name': name_gen.first_name(), 'roles': [role], 'weeks_off': self.generate_weeks_off()}
-            
-            band['muscicians'].append(person)
-
-            roles.pop(roles.index(role))
-
-        while len(roles) > 0:
-            for person in band['muscicians']:
-                if len(roles) == 0:
-                    break
-                
-                if role in person['roles']:
-                    continue
-
-                person['roles'].append(role)
-                roles.pop(0)
-
-        return band
+        return sample([person['name'] for person in assigned_people], choose_amount)
     
     def schedule_band(self):
         '''
-        schedule_band assignes the memebers of the band to a specific week and returns a string with the week and band memebers playing aswell as there role
+        schedule_band is used to schedule the band by assigning people to diffrent roles and returning a string with the week and the muisicians
+        that will be playing in that week
         '''
-
-        finished_schedule = ''
+        finished_schedule = []
 
         band = deepcopy(self.band)
 
         for week in range(1, self.weeks_needed + 1):
             try:
-                drummer = self.pick_person(band=band, week=week, role='drummer')
-                bass_player = self.pick_person(band=band, week=week, role='bass_player')
-                vocalists = self.pick_person(band=band, week=week, role='vocalist', choose_amount=2)
-                guitarist = self.pick_person(band=band, week=week, role='guitarist')
-            except IndexError:
-                print(f'Week: {week} Doesnt not have enough people to perform')
+                drummer = self.pick_people(band=band, week=week, needed_role='drummer')
+                bass_player = self.pick_people(band=band, week=week, needed_role='bass_player')
+                vocalists = self.pick_people(band=band, week=week, needed_role='vocalist', choose_amount=2)
+                guitarist = self.pick_people(band=band, week=week, needed_role='guitarist')
+                
+                finished_schedule.append(f'Week: {week} \nDrummer: {''.join(drummer)} \nBassist: {''.join(bass_player)} \nVocalists: {', '.join(vocalists)} \nGuitarist: {''.join(guitarist)}\n\n')
+                band = deepcopy(self.band)
+            except ValueError:
+                finished_schedule.append(f'Week: {week} Doesnt not have enough people to perform\n\n')
 
-            finished_schedule += f'Week: {week} \nDrummer: {''.join(drummer)} \nBassist: {''.join(bass_player)} \nVocalists: {', '.join(vocalists)} \nGuitarist: {''.join(guitarist)}\n\n'
-            band = deepcopy(self.band)
-
-        return finished_schedule
+        return ''.join(finished_schedule)
     
-band = Scheduler(weeks_needed=12, people_in_band=14, drummers=3, bass_players=2, vocalists=8, guitarists=4)
+schedule = Scheduler(weeks_needed=12, band=generate_band(weeks_needed=12, people_in_band=12, drummers=3, bass_players=2, vocalists=8, guitarists=4))
 
-print(band)
+print(schedule.schedule_band())
