@@ -1,5 +1,5 @@
 '''
-A church has 3 drummers, 2 bass players, 8 vocalists, and 4 guitarists. 
+A church has 3 drummers, 2 bass players, 8 vocalists, and 4 guitarists
 Give each some random weeks they're out of town, and then try and create a three month schedule with 1 drummer, 1 bass, 1 guitar, and 2 vocalists each week.
 What happens if someone has multiple roles?
 '''
