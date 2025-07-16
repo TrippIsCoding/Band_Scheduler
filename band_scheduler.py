@@ -36,7 +36,7 @@ class Scheduler():
     
     def schedule_band(self):
         '''
-        schedule_band is used to schedule the band by assigning people to diffrent roles and returning a string with the week and the muisicians
+        schedule_band is used to schedule the band by assigning people to diffrent roles and returning a string with the week and the musicians
         that will be playing in that week
         '''
         finished_schedule = []
