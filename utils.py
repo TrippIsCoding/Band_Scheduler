@@ -8,7 +8,7 @@ def generate_weeks_off(weeks_needed: int):
 
 def generate_band(weeks_needed: int, people_in_band: int, drummers: int, bass_players: int, vocalists: int, guitarists: int):
     band = {
-        'muscicians': []
+        'musicians': []
     }
     
     amount_of_roles = {
@@ -24,12 +24,12 @@ def generate_band(weeks_needed: int, people_in_band: int, drummers: int, bass_pl
         role = choice(roles)
         person = {'name': name_gen.first_name(), 'roles': [role], 'weeks_off': generate_weeks_off(weeks_needed=weeks_needed)}
             
-        band['muscicians'].append(person)
+        band['musicians'].append(person)
 
         roles.pop(roles.index(role))
 
     while len(roles) > 0:
-        for person in band['muscicians']:
+        for person in band['musicians']:
             if len(roles) == 0:
                 break
 
