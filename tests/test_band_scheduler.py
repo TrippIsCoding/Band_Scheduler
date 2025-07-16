@@ -1,7 +1,7 @@
 from band_scheduler import Scheduler
 
 band = {
-    'muscicians': [
+    'musicians': [
         {'name': 'test_1', 'roles': ['drummer', 'bass_player', 'vocalist', 'guitarist'], 'weeks_off': [1, 2, 3]},
         {'name': 'test_2', 'roles': ['drummer', 'bass_player', 'vocalist', 'guitarist'], 'weeks_off': [4, 5, 6]},
         {'name': 'test_3', 'roles': ['drummer', 'bass_player', 'vocalist', 'guitarist'], 'weeks_off': [7, 8, 9]},
@@ -16,7 +16,7 @@ band = {
 test_schedule = Scheduler(band=band, weeks_needed=12)
 
 def test_pick_people():
-    names = [person['name'] for person in band['muscicians']]
+    names = [person['name'] for person in band['musicians']]
 
     testing_function = lambda week, needed_role, choose_amount: test_schedule.pick_people(band=band, week=week, needed_role=needed_role, choose_amount=choose_amount)
 

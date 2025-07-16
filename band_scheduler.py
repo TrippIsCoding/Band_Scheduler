@@ -18,17 +18,17 @@ class Scheduler():
         pick_people is picking a person from the band that has the needed_role and they need to be available that week.
         In the end of the function it returns the name or names of people who are chosen from the available_people list
         '''
-
+        
         available_people = []
 
-        for person in band['muscicians']:
+        for person in band['musicians']:
             if not week in person['weeks_off'] and needed_role in person['roles']:
                 available_people.append(person)
         
         assigned_people = list(sample(available_people, k=choose_amount))
     
         for person in assigned_people:
-            band['muscicians'].remove(person)
+            band['musicians'].remove(person)
 
         list_of_people = [person['name'] for person in assigned_people]
 
