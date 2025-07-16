@@ -21,14 +21,14 @@ class Scheduler():
 
         available_people = []
 
-        for person in band['muscicians']:
+        for person in band['musicians']:
             if not week in person['weeks_off'] and needed_role in person['roles']:
                 available_people.append(person)
         
         assigned_people = list(sample(available_people, k=choose_amount))
     
         for person in assigned_people:
-            band['muscicians'].remove(person)
+            band['musicians'].remove(person)
 
         list_of_people = [person['name'] for person in assigned_people]
 
@@ -36,7 +36,7 @@ class Scheduler():
     
     def schedule_band(self):
         '''
-        schedule_band is used to schedule the band by assigning people to diffrent roles and returning a string with the week and the muisicians
+        schedule_band is used to schedule the band by assigning people to diffrent roles and returning a string with the week and the musicians
         that will be playing in that week
         '''
         finished_schedule = []
